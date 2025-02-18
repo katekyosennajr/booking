@@ -47,4 +47,23 @@ $routes->group('api', ['filter' => 'auth'], function($routes) {
         $routes->put('update/(:num)', 'TimeSlotController::update/$1');
         $routes->delete('delete/(:num)', 'TimeSlotController::delete/$1');
     });
+
+    // Admin routes
+    $routes->group('admin', function($routes) {
+        $routes->get('dashboard-stats', 'AdminController::getDashboardStats');
+        $routes->get('bookings', 'AdminController::getBookingsByDateRange');
+        $routes->get('service-stats', 'AdminController::getServiceStats');
+        $routes->get('user-stats', 'AdminController::getUserStats');
+        $routes->post('update-booking-status', 'AdminController::updateBookingStatus');
+    });
+});
+
+// Admin dashboard routes
+$routes->group('admin', ['filter' => 'auth'], function($routes) {
+    $routes->get('/', 'AdminController::index');
+    $routes->get('bookings', 'AdminController::index');
+    $routes->get('services', 'AdminController::index');
+    $routes->get('users', 'AdminController::index');
+    $routes->get('time-slots', 'AdminController::index');
+    $routes->get('settings', 'AdminController::index');
 });
