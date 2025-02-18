@@ -6,10 +6,6 @@ use CodeIgniter\Config\BaseConfig;
 
 class Email extends BaseConfig
 {
-    public string $fromEmail  = '';
-    public string $fromName   = '';
-    public string $recipients = '';
-
     /**
      * The "user agent"
      */
@@ -18,7 +14,7 @@ class Email extends BaseConfig
     /**
      * The mail sending protocol: mail, sendmail, smtp
      */
-    public string $protocol = 'mail';
+    public string $protocol = 'smtp';
 
     /**
      * The server path to Sendmail.
@@ -43,7 +39,7 @@ class Email extends BaseConfig
     /**
      * SMTP Port
      */
-    public int $SMTPPort = 25;
+    public int $SMTPPort = 587;
 
     /**
      * SMTP Timeout (in seconds)
@@ -77,7 +73,7 @@ class Email extends BaseConfig
     /**
      * Type of mail, either 'text' or 'html'
      */
-    public string $mailType = 'text';
+    public string $mailType = 'html';
 
     /**
      * Character set (utf-8, iso-8859-1, etc.)
@@ -87,7 +83,7 @@ class Email extends BaseConfig
     /**
      * Whether to validate the email address
      */
-    public bool $validate = false;
+    public bool $validate = true;
 
     /**
      * Email Priority. 1 = highest. 5 = lowest. 3 = normal
@@ -118,4 +114,21 @@ class Email extends BaseConfig
      * Enable notify message from server
      */
     public bool $DSN = false;
+
+    public string $fromEmail  = '';
+    public string $fromName   = '';
+    public string $recipients = '';
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        // Load email settings from environment variables
+        $this->fromEmail = getenv('MAIL_FROM') ?: 'noreply@example.com';
+        $this->fromName = getenv('MAIL_FROM_NAME') ?: 'Booking System';
+        $this->SMTPHost = getenv('SMTP_HOST') ?: '';
+        $this->SMTPUser = getenv('SMTP_USER') ?: '';
+        $this->SMTPPass = getenv('SMTP_PASS') ?: '';
+        $this->SMTPPort = getenv('SMTP_PORT') ? (int) getenv('SMTP_PORT') : 587;
+    }
 }
