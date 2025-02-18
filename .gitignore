@@ -1,0 +1,22 @@
+# CodeIgniter 4
+/vendor/
+/writable/cache/*
+/writable/logs/*
+/writable/session/*
+/writable/uploads/*
+/writable/debugbar/*
+
+# IDE Files
+#-------------------------
+/nbproject/
+.idea/*
+*.sublime-project
+*.sublime-workspace
+.vscode/
+
+# Environment Files
+#-------------------------
+.env
+.env.backup
+.DS_Store
+Thumbs.db
