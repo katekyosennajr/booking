@@ -14,11 +14,13 @@ class BookingModel extends Model
 
     protected $allowedFields = [
         'user_id',
+        'service_id',
         'title',
         'description',
         'start_time',
         'end_time',
-        'status'
+        'status',
+        'notes'
     ];
 
     protected $useTimestamps = true;
@@ -27,6 +29,7 @@ class BookingModel extends Model
 
     protected $validationRules = [
         'user_id' => 'required|integer',
+        'service_id' => 'required|integer',
         'title' => 'required|min_length[3]|max_length[255]',
         'start_time' => 'required|valid_date',
         'end_time' => 'required|valid_date',
@@ -37,6 +40,10 @@ class BookingModel extends Model
         'user_id' => [
             'required' => 'User ID is required',
             'integer' => 'User ID must be a number'
+        ],
+        'service_id' => [
+            'required' => 'Service ID is required',
+            'integer' => 'Service ID must be a number'
         ],
         'title' => [
             'required' => 'Title is required',
@@ -59,12 +66,6 @@ class BookingModel extends Model
 
     protected $skipValidation = false;
 
-    // Get bookings for a specific user
-    public function getUserBookings($userId)
-    {
-        return $this->where('user_id', $userId)->findAll();
-    }
-
     // Get bookings by status
     public function getBookingsByStatus($status)
     {
@@ -77,5 +78,58 @@ class BookingModel extends Model
         return $this->where('start_time >=', $startDate)
                     ->where('end_time <=', $endDate)
                     ->findAll();
+    }
+
+    // Get bookings for a specific user
+    public function getUserBookings($userId)
+    {
+        return $this->where('user_id', $userId)->findAll();
+    }
+
+    // Check for booking conflicts
+    public function hasConflict($startTime, $endTime, $excludeId = null)
+    {
+        $query = $this->where('status !=', 'cancelled')
+                     ->where('start_time <', $endTime)
+                     ->where('end_time >', $startTime);
+
+        if ($excludeId) {
+            $query->where('id !=', $excludeId);
+        }
+
+        return $query->countAllResults() > 0;
+    }
+
+    // Check if service is available at the given time
+    public function isServiceAvailable($serviceId, $startTime, $endTime)
+    {
+        // Get the day of week (0 = Sunday, 6 = Saturday)
+        $dayOfWeek = date('w', strtotime($startTime));
+        
+        // Get time in HH:mm format
+        $startTimeStr = date('H:i', strtotime($startTime));
+        $endTimeStr = date('H:i', strtotime($endTime));
+
+        // Check if there's a time slot available
+        $timeSlotModel = new TimeSlotModel();
+        $timeSlots = $timeSlotModel->where('day_of_week', $dayOfWeek)
+                                  ->where('start_time <=', $startTimeStr)
+                                  ->where('end_time >=', $endTimeStr)
+                                  ->where('is_active', true)
+                                  ->findAll();
+
+        if (empty($timeSlots)) {
+            return false;
+        }
+
+        // Check service exists and is active
+        $serviceModel = new ServiceModel();
+        $service = $serviceModel->find($serviceId);
+        if (!$service || !$service['is_active']) {
+            return false;
+        }
+
+        // Check for booking conflicts
+        return !$this->hasConflict($startTime, $endTime);
     }
 }

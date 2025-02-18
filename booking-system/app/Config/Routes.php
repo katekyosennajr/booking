@@ -20,6 +20,8 @@ $routes->group('api', ['filter' => 'auth'], function($routes) {
     $routes->group('bookings', function($routes) {
         $routes->get('/', 'BookingController::index');
         $routes->get('list', 'BookingController::getBookings');
+        $routes->get('user', 'BookingController::getUserBookings');
+        $routes->post('check-availability', 'BookingController::checkAvailability');
         $routes->post('create', 'BookingController::create');
         $routes->put('update/(:num)', 'BookingController::update/$1');
         $routes->delete('delete/(:num)', 'BookingController::delete/$1');
