@@ -19,18 +19,21 @@
   "license": "MIT",
   "dependencies": {
     "vue": "^3.3.0",
+    "vue-router": "^4.2.5",
+    "vuex": "^4.1.0",
     "@fullcalendar/core": "^6.1.10",
     "@fullcalendar/daygrid": "^6.1.10",
     "@fullcalendar/interaction": "^6.1.10",
     "@fullcalendar/vue3": "^6.1.10",
-    "axios": "^1.6.0"
+    "axios": "^1.6.0",
+    "bootstrap": "^5.3.2",
+    "@popperjs/core": "^2.11.8"
   },
   "devDependencies": {
     "laravel-mix": "^6.0.49",
     "vue-loader": "^17.3.1",
     "@vue/compiler-sfc": "^3.3.0",
-    "resolve-url-loader": "^5.0.0",
-    "sass": "^1.69.0",
-    "sass-loader": "^13.3.0"
+    "sass": "^1.69.5",
+    "sass-loader": "^13.3.2"
   }
 }

@@ -10,8 +10,8 @@
  |
  | If you set 'display_errors' to '1', CI4's detailed error report will show.
  */
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+ini_set('display_errors', '0');
 
 /*
  |--------------------------------------------------------------------------
@@ -21,7 +21,7 @@ ini_set('display_errors', '1');
  | backtraces along with the other error information. If you would
  | prefer to not see this, set this value to false.
  */
-defined('SHOW_DEBUG_BACKTRACE') || define('SHOW_DEBUG_BACKTRACE', true);
+defined('SHOW_DEBUG_BACKTRACE') || define('SHOW_DEBUG_BACKTRACE', false);
 
 /*
  |--------------------------------------------------------------------------
